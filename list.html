@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calendar Entries</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f0f0f0;
+      }
+      h1 {
+        text-align: center;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      th,
+      td {
+        border: 1px solid #ccc;
+        padding: 10px;
+        text-align: left;
+      }
+      th {
+        background-color: #007bff;
+        color: white;
+      }
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+      .btn {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 15px 30px;
+        cursor: pointer;
+        font-size: 18px;
+        margin: 10px;
+        text-decoration: none;
+        display: inline-block;
+      }
+      .btn:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Calendar Entries</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Day</th>
+          <th>Month</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody id="calendarEntries">
+        <!-- Entries will be inserted here dynamically -->
+      </tbody>
+    </table>
+
+    <a href="index.html" class="btn">Home</a>
+
+    <script>
+      // Fetch data from API endpoint
+      fetch("https://lunar-cal.onrender.com/all")
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Calendar entries:", data);
+
+          // Select the table body
+          const tableBody = document.getElementById("calendarEntries");
+
+          // Clear any existing content
+          tableBody.innerHTML = "";
+
+          // Iterate over each entry and create table rows
+          data.forEach((entry) => {
+            // Ignore _id and __v fields
+            const { _id, __v, ...rest } = entry;
+
+            // Create a table row
+            const row = document.createElement("tr");
+
+            // Populate row cells with entry data
+            Object.values(rest).forEach((value) => {
+              const cell = document.createElement("td");
+              cell.textContent = value;
+              row.appendChild(cell);
+            });
+
+            // Append row to table body
+            tableBody.appendChild(row);
+          });
+        })
+        .catch((error) => {
+          console.error("Error fetching calendar entries:", error);
+          alert("Error fetching calendar entries. Please try again later.");
+        });
+    </script>
+  </body>
+</html>
